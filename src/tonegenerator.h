@@ -7,11 +7,10 @@
 #include <QObject>
 #include <QScopedPointer>
 
-class ToneGenerator : public QObject
-{
+class ToneGenerator : public QObject {
     Q_OBJECT
 
-public:
+  public:
     explicit ToneGenerator(QObject *parent = nullptr);
     ~ToneGenerator();
 
@@ -21,17 +20,17 @@ public:
 
     bool isPlaying() const;
 
-public slots:
+  public slots:
     void playTone();
 
-signals:
+  signals:
     void tonePlayed();
     void playbackFinished();
 
-private slots:
+  private slots:
     void handleStateChanged(QAudio::State state);
 
-private:
+  private:
     void generateTone();
     void initAudioSink();
 

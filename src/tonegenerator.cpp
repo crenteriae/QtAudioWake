@@ -3,30 +3,27 @@
 #include <QMediaDevices>
 #include <QtMath>
 
-ToneGenerator::ToneGenerator(QObject *parent)
-    : QObject(parent)
-{
+ToneGenerator::ToneGenerator(QObject *parent) : QObject(parent) {
     initAudioSink();
     generateTone();
 }
 
 ToneGenerator::~ToneGenerator() = default;
 
-void ToneGenerator::initAudioSink()
-{
+void ToneGenerator::initAudioSink() {
     QAudioFormat format;
     format.setSampleRate(m_sampleRate);
     format.setChannelCount(1);
     format.setSampleFormat(QAudioFormat::Int16);
 
-    m_audioSink.reset(new QAudioSink(QMediaDevices::defaultAudioOutput(), format));
+    m_audioSink.reset(
+        new QAudioSink(QMediaDevices::defaultAudioOutput(), format));
 
-    connect(m_audioSink.data(), &QAudioSink::stateChanged,
-            this, &ToneGenerator::handleStateChanged);
+    connect(m_audioSink.data(), &QAudioSink::stateChanged, this,
+            &ToneGenerator::handleStateChanged);
 }
 
-void ToneGenerator::handleStateChanged(QAudio::State state)
-{
+void ToneGenerator::handleStateChanged(QAudio::State state) {
     if (state == QAudio::IdleState || state == QAudio::StoppedState) {
         if (m_isPlaying) {
             m_isPlaying = false;
@@ -36,24 +33,21 @@ void ToneGenerator::handleStateChanged(QAudio::State state)
     }
 }
 
-void ToneGenerator::setFrequency(int frequency)
-{
+void ToneGenerator::setFrequency(int frequency) {
     if (m_frequency != frequency) {
         m_frequency = frequency;
         generateTone();
     }
 }
 
-void ToneGenerator::setDuration(int durationMs)
-{
+void ToneGenerator::setDuration(int durationMs) {
     if (m_durationMs != durationMs) {
         m_durationMs = durationMs;
         generateTone();
     }
 }
 
-void ToneGenerator::setVolume(float volume)
-{
+void ToneGenerator::setVolume(float volume) {
     float clamped = qBound(0.0f, volume, 1.0f);
     if (!qFuzzyCompare(m_volume, clamped)) {
         m_volume = clamped;
@@ -61,13 +55,9 @@ void ToneGenerator::setVolume(float volume)
     }
 }
 
-bool ToneGenerator::isPlaying() const
-{
-    return m_isPlaying;
-}
+bool ToneGenerator::isPlaying() const { return m_isPlaying; }
 
-void ToneGenerator::generateTone()
-{
+void ToneGenerator::generateTone() {
     const int toneSamples = (m_sampleRate * m_durationMs) / 1000;
 
     if (toneSamples < 1) {
@@ -105,15 +95,15 @@ void ToneGenerator::generateTone()
             envelope = 0.5 * (1.0 + qCos(M_PI * fadePos / fadeSamples));
         }
 
-        toneStart[i] = static_cast<qint16>(amplitude * envelope * qSin(angularFreq * i));
+        toneStart[i] =
+            static_cast<qint16>(amplitude * envelope * qSin(angularFreq * i));
     }
 
     toneStart[0] = 0;
     toneStart[toneSamples - 1] = 0;
 }
 
-void ToneGenerator::playTone()
-{
+void ToneGenerator::playTone() {
     if (m_isPlaying || m_audioData.isEmpty()) {
         return;
     }

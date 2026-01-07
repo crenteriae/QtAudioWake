@@ -3,8 +3,7 @@
 
 namespace Components {
 
-QGroupBox *createIntervalGroup(QSpinBox *&outSpinBox)
-{
+QGroupBox *createIntervalGroup(QSpinBox *&outSpinBox) {
     auto *group = new QGroupBox("Interval");
     auto *layout = new QHBoxLayout(group);
 
@@ -22,8 +21,7 @@ QGroupBox *createIntervalGroup(QSpinBox *&outSpinBox)
     return group;
 }
 
-QGroupBox *createDurationGroup(QSpinBox *&outSpinBox)
-{
+QGroupBox *createDurationGroup(QSpinBox *&outSpinBox) {
     auto *group = new QGroupBox("Tone Duration");
     auto *layout = new QHBoxLayout(group);
 
@@ -42,8 +40,7 @@ QGroupBox *createDurationGroup(QSpinBox *&outSpinBox)
     return group;
 }
 
-QGroupBox *createVolumeGroup(QSlider *&outSlider, QLabel *&outVolumeLabel)
-{
+QGroupBox *createVolumeGroup(QSlider *&outSlider, QLabel *&outVolumeLabel) {
     auto *group = new QGroupBox("Volume");
     auto *layout = new QHBoxLayout(group);
 
@@ -60,8 +57,7 @@ QGroupBox *createVolumeGroup(QSlider *&outSlider, QLabel *&outVolumeLabel)
     return group;
 }
 
-QPushButton *createToggleButton()
-{
+QPushButton *createToggleButton() {
     auto *button = new QPushButton("Start Keep-Alive");
     button->setObjectName("toggleButton");
     button->setMinimumHeight(40);

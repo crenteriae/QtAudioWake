@@ -10,21 +10,20 @@
 
 class ToneGenerator;
 
-class MainWindow : public QMainWindow
-{
+class MainWindow : public QMainWindow {
     Q_OBJECT
 
-public:
+  public:
     explicit MainWindow(int frequency, QWidget *parent = nullptr);
     ~MainWindow();
 
-private slots:
+  private slots:
     void toggleKeepAlive();
     void updateInterval(int seconds);
     void updateDuration(int ms);
     void updateVolume(int value);
 
-private:
+  private:
     void setupUi();
     void createConnections();
     void loadStyleSheet();
