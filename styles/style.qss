@@ -1,0 +1,38 @@
+#infoLabel {
+    color: #666;
+    font-size: 11px;
+}
+
+#toggleButton {
+    background-color: #4CAF50;
+    color: white;
+    font-weight: bold;
+    border-radius: 5px;
+    border: none;
+}
+
+#toggleButton:hover {
+    background-color: #45a049;
+}
+
+#toggleButton[running="true"] {
+    background-color: #f44336;
+}
+
+#toggleButton[running="true"]:hover {
+    background-color: #da190b;
+}
+
+QGroupBox {
+    font-weight: bold;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 10px;
+    padding-top: 10px;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 10px;
+    padding: 0 5px;
+}
