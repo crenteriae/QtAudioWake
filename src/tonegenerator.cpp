@@ -2,6 +2,14 @@
 #include <QAudioFormat>
 #include <QMediaDevices>
 #include <QtMath>
+#include <qaudiodevice.h>
+#include <qmediadevices.h>
+
+namespace {
+constexpr int kSilencePaddingMs = 10;
+constexpr int kFadeMs = 25;
+constexpr double kMaxAmplitude = 32767.0;
+} // namespace
 
 ToneGenerator::ToneGenerator(QObject *parent) : QObject(parent) {
     initAudioSink();
@@ -16,8 +24,17 @@ void ToneGenerator::initAudioSink() {
     format.setChannelCount(1);
     format.setSampleFormat(QAudioFormat::Int16);
 
-    m_audioSink.reset(
-        new QAudioSink(QMediaDevices::defaultAudioOutput(), format));
+    QAudioDevice device = QMediaDevices::defaultAudioOutput();
+    if (device.isNull()) {
+        qWarning("No audio output device available");
+        return;
+    }
+    if (device.isFormatSupported(format)) {
+        qWarning("Audio format not supported");
+        format = device.preferredFormat();
+    }
+
+    m_audioSink.reset(new QAudioSink(device, format));
 
     connect(m_audioSink.data(), &QAudioSink::stateChanged, this,
             &ToneGenerator::handleStateChanged);
@@ -67,7 +84,7 @@ void ToneGenerator::generateTone() {
 
     // Audio devices need a few ms of silence upon initializing
     // Will otherwise produce a clicking sound
-    const int silencePadding = (m_sampleRate * 10) / 1000;
+    const int silencePadding = (m_sampleRate * kSilencePaddingMs) / 1000;
     const int totalSamples = silencePadding + toneSamples + silencePadding;
 
     m_audioData.resize(totalSamples * sizeof(qint16));
@@ -77,10 +94,9 @@ void ToneGenerator::generateTone() {
 
     // Generate tone in the middle section
     const double angularFreq = 2.0 * M_PI * m_frequency / m_sampleRate;
-    const double amplitude = 32767.0 * m_volume;
+    const double amplitude = kMaxAmplitude * m_volume;
 
-    const int fadeMs = 25;
-    int fadeSamples = qMin((m_sampleRate * fadeMs) / 1000, toneSamples / 4);
+    int fadeSamples = qMin((m_sampleRate * kFadeMs) / 1000, toneSamples / 4);
     fadeSamples = qMax(fadeSamples, 1);
 
     qint16 *toneStart = data + silencePadding;

@@ -2,12 +2,13 @@
 #include <QApplication>
 #include <QCommandLineParser>
 
-const QString FREQUENCY_OPT_NAME = "frequency";
-const QString FREQUENCY_OPT_SHORTCUT = "f";
+namespace {
+const QString kFrequencyOptName = "frequency";
+const QString kFrequencyOptShortcut = "f";
 
-int ParseFrequency(QCommandLineParser &parser) {
+int parseFrequency(QCommandLineParser &parser) {
     bool ok;
-    int frequency = parser.value(FREQUENCY_OPT_NAME).toInt(&ok);
+    int frequency = parser.value(kFrequencyOptName).toInt(&ok);
     if (!ok || frequency < 1000 || frequency > 22000) {
         qWarning() << "Invalid frequency, using default:"
                    << DEFAULT_TONE_FREQUENCY;
@@ -17,15 +18,17 @@ int ParseFrequency(QCommandLineParser &parser) {
     return frequency;
 }
 
-void AddCmdArgs(QCommandLineParser &parser) {
+void addCmdArgs(QCommandLineParser &parser) {
     parser.addHelpOption();
     QCommandLineOption frequencyOption(
-        QStringList() << FREQUENCY_OPT_SHORTCUT << FREQUENCY_OPT_NAME,
+        QStringList() << kFrequencyOptShortcut << kFrequencyOptName,
         "Tone frequency in Hz (default: " +
             QString::number(DEFAULT_TONE_FREQUENCY) + ")",
         "hz", QString::number(DEFAULT_TONE_FREQUENCY));
     parser.addOption(frequencyOption);
 }
+
+} // namespace
 
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
@@ -34,10 +37,10 @@ int main(int argc, char *argv[]) {
     QCommandLineParser parser;
     parser.setApplicationDescription(
         "Plays a high-frequency tone to prevent speakers from sleeping");
-    AddCmdArgs(parser);
+    addCmdArgs(parser);
     parser.process(app);
 
-    int frequency = ParseFrequency(parser);
+    int frequency = parseFrequency(parser);
     MainWindow window(frequency);
     window.show();
 
