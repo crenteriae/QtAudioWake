@@ -6,6 +6,8 @@ namespace Components {
 QGroupBox *createIntervalGroup(QSpinBox *&outSpinBox) {
     auto *group = new QGroupBox("Interval");
     auto *layout = new QHBoxLayout(group);
+    layout->setContentsMargins(10, 5, 10, 5);
+    layout->setAlignment(Qt::AlignVCenter);
 
     layout->addWidget(new QLabel("Play every:"));
 
@@ -24,6 +26,8 @@ QGroupBox *createIntervalGroup(QSpinBox *&outSpinBox) {
 QGroupBox *createDurationGroup(QSpinBox *&outSpinBox) {
     auto *group = new QGroupBox("Tone Duration");
     auto *layout = new QHBoxLayout(group);
+    layout->setContentsMargins(10, 5, 10, 5);
+    layout->setAlignment(Qt::AlignVCenter);
 
     layout->addWidget(new QLabel("Length:"));
 
@@ -43,6 +47,8 @@ QGroupBox *createDurationGroup(QSpinBox *&outSpinBox) {
 QGroupBox *createVolumeGroup(QSlider *&outSlider, QLabel *&outVolumeLabel) {
     auto *group = new QGroupBox("Volume");
     auto *layout = new QHBoxLayout(group);
+    layout->setContentsMargins(10, 5, 10, 5);
+    layout->setAlignment(Qt::AlignVCenter);
 
     outSlider = new QSlider(Qt::Horizontal);
     outSlider->setRange(1, 100);
@@ -59,7 +65,6 @@ QGroupBox *createVolumeGroup(QSlider *&outSlider, QLabel *&outVolumeLabel) {
 
 QPushButton *createToggleButton() {
     auto *button = new QPushButton("Start Keep-Alive");
-    button->setObjectName("toggleButton");
     button->setMinimumHeight(40);
     return button;
 }
