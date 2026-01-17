@@ -4,10 +4,9 @@ QSlider {
 
 QGroupBox {
     font-weight: bold;
-    border: 1px solid #ccc;
+    border: 1px solid palette(light);
     border-radius: 5px;
     margin-top: 10px;
-    padding-top: 10px;
 }
 
 QGroupBox::title {

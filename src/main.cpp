@@ -5,11 +5,13 @@
 namespace {
 const QString kFrequencyOptName = "frequency";
 const QString kFrequencyOptShortcut = "f";
+constexpr int kMaxFrequency = 30000;
+constexpr int kMinFrequency = 1000;
 
 int parseFrequency(QCommandLineParser &parser) {
     bool ok;
     int frequency = parser.value(kFrequencyOptName).toInt(&ok);
-    if (!ok || frequency < 1000 || frequency > 22000) {
+    if (!ok || frequency < kMinFrequency || frequency > kMaxFrequency) {
         qWarning() << "Invalid frequency, using default:"
                    << DEFAULT_TONE_FREQUENCY;
         frequency = DEFAULT_TONE_FREQUENCY;
