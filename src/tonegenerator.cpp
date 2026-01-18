@@ -29,7 +29,7 @@ void ToneGenerator::initAudioSink() {
         qWarning("No audio output device available");
         return;
     }
-    if (device.isFormatSupported(format)) {
+    if (!device.isFormatSupported(format)) {
         qWarning("Audio format not supported");
         format = device.preferredFormat();
     }
