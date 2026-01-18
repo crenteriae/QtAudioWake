@@ -2,5 +2,6 @@
 <RCC version="1.0">
     <qresource prefix="/">
         <file>styles/style.qss</file>
+        <file>icons/icon.png</file>
     </qresource>
 </RCC>

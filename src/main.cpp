@@ -34,7 +34,7 @@ void addCmdArgs(QCommandLineParser &parser) {
 
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
-    app.setApplicationName("QtAudioWake");
+    app.setApplicationName(APPLICATION_NAME);
 
     QCommandLineParser parser;
     parser.setApplicationDescription(

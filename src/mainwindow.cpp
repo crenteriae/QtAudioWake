@@ -13,9 +13,10 @@ MainWindow::MainWindow(int frequency, QWidget *parent)
 
     setupUi();
     createConnections();
+    setupSystemTray();
     loadStyleSheet();
 
-    setWindowTitle("Speaker Keep-Alive");
+    setWindowTitle(APPLICATION_NAME);
     setFixedSize(350, 300);
 }
 
@@ -53,6 +54,64 @@ void MainWindow::setupUi() {
 
     mainLayout->addStretch();
     setCentralWidget(centralWidget);
+}
+
+void MainWindow::setupSystemTray() {
+    if (!QSystemTrayIcon::isSystemTrayAvailable()) {
+        return;
+    }
+
+    m_trayIcon = new QSystemTrayIcon(this);
+    m_trayIcon->setIcon(QIcon(":icons/icon.png"));
+    m_trayIcon->setToolTip(APPLICATION_NAME);
+
+    m_trayMenu = new QMenu(this);
+
+    auto *showAction = m_trayMenu->addAction("Show/Hide");
+    connect(showAction, &QAction::triggered, this,
+            &MainWindow::toggleVisibility);
+
+    auto *toggleAction = m_trayMenu->addAction("Toggle Keep-Alive");
+    connect(toggleAction, &QAction::triggered, this,
+            &MainWindow::toggleKeepAlive);
+
+    m_trayMenu->addSeparator();
+
+    auto *quitAction = m_trayMenu->addAction("Quit");
+    connect(quitAction, &QAction::triggered, qApp, &QApplication::quit);
+
+    m_trayIcon->setContextMenu(m_trayMenu);
+    m_trayIcon->show();
+
+    connect(m_trayIcon, &QSystemTrayIcon::activated, this,
+            [this](QSystemTrayIcon::ActivationReason reason) {
+                if (reason == QSystemTrayIcon::DoubleClick) {
+                    toggleVisibility();
+                }
+            });
+}
+
+void MainWindow::toggleVisibility() {
+    if (isVisible()) {
+        hide();
+    } else {
+        showNormal();
+        activateWindow();
+        raise();
+    }
+}
+
+void MainWindow::closeEvent(QCloseEvent *event) {
+    if (m_minimizeToTray && m_trayIcon && m_trayIcon->isVisible()) {
+        hide();
+        m_trayIcon->showMessage(
+            APPLICATION_NAME,
+            "Application minimzed to tray. Double click to restore.",
+            QSystemTrayIcon::Information, 2000);
+        event->ignore();
+    } else {
+        event->accept();
+    }
 }
 
 void MainWindow::createConnections() {

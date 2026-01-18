@@ -9,7 +9,8 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
-set(TONE_FREQUENCY "19000" CACHE STRING "Default tone frequency in Hz")
+set(TONE_FREQUENCY "22000" CACHE STRING "Default tone frequency in Hz")
+set(APP_NAME "QtAudioWake" CACHE STRING "Speaker keep-alive utility")
 
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets Multimedia)
 
@@ -25,7 +26,8 @@ add_executable(${PROJECT_NAME}
 )
 
 target_compile_definitions(QtAudioWake PRIVATE
-    DEFAULT_TONE_FREQUENCY=${TONE_FREQUENCY})
+    DEFAULT_TONE_FREQUENCY=${TONE_FREQUENCY}
+    APPLICATION_NAME="${APP_NAME}")
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
   Qt6::Core

@@ -34,7 +34,7 @@ class ToneGenerator : public QObject {
     void generateTone();
     void initAudioSink();
 
-    int m_frequency = 19000;
+    int m_frequency = 22000;
     int m_durationMs = 50;
     float m_volume = 0.3f;
     int m_sampleRate = 48000;
