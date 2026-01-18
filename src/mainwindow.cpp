@@ -6,9 +6,10 @@
 #include <QStyle>
 #include <QVBoxLayout>
 
-MainWindow::MainWindow(int frequency, QWidget *parent)
+MainWindow::MainWindow(int frequency, bool startMinimized, QWidget *parent)
     : QMainWindow(parent), m_toneGenerator(new ToneGenerator(this)),
-      m_intervalTimer(new QTimer(this)), m_frequency(frequency) {
+      m_intervalTimer(new QTimer(this)), m_frequency(frequency),
+      m_startMinimized(startMinimized) {
     m_toneGenerator->setFrequency(m_frequency);
 
     setupUi();
@@ -18,6 +19,9 @@ MainWindow::MainWindow(int frequency, QWidget *parent)
 
     setWindowTitle(APPLICATION_NAME);
     setFixedSize(350, 300);
+
+    if (m_startMinimized)
+        toggleKeepAlive();
 }
 
 MainWindow::~MainWindow() = default;

@@ -20,7 +20,8 @@ class MainWindow : public QMainWindow {
     void closeEvent(QCloseEvent *event) override;
 
   public:
-    explicit MainWindow(int frequency, QWidget *parent = nullptr);
+    explicit MainWindow(int frequency, bool startMinimized = false,
+                        QWidget *parent = nullptr);
     ~MainWindow();
 
   private slots:
@@ -51,6 +52,7 @@ class MainWindow : public QMainWindow {
 
     int m_frequency;
     bool m_isRunning = false;
+    bool m_startMinimized = false;
 };
 
 #endif // MAINWINDOW_H

@@ -5,6 +5,8 @@
 namespace {
 const QString kFrequencyOptName = "frequency";
 const QString kFrequencyOptShortcut = "f";
+const QString kMinimizeOptName = "minimized";
+const QString kMinimizeOptShortcut = "m";
 constexpr int kMaxFrequency = 30000;
 constexpr int kMinFrequency = 1000;
 
@@ -28,12 +30,18 @@ void addCmdArgs(QCommandLineParser &parser) {
             QString::number(DEFAULT_TONE_FREQUENCY) + ")",
         "hz", QString::number(DEFAULT_TONE_FREQUENCY));
     parser.addOption(frequencyOption);
+
+    QCommandLineOption minimizeOption(
+        QStringList() << kMinimizeOptShortcut << kMinimizeOptName,
+        "Starts the application minimized to the system tray if set");
+    parser.addOption(minimizeOption);
 }
 
 } // namespace
 
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
+    app.setQuitOnLastWindowClosed(false);
     app.setApplicationName(APPLICATION_NAME);
 
     QCommandLineParser parser;
@@ -43,8 +51,11 @@ int main(int argc, char *argv[]) {
     parser.process(app);
 
     int frequency = parseFrequency(parser);
-    MainWindow window(frequency);
-    window.show();
+    bool startMinimized = parser.isSet(kMinimizeOptName);
+    MainWindow window(frequency, startMinimized);
+
+    if (!startMinimized)
+        window.show();
 
     return app.exec();
 }
