@@ -1,4 +1,5 @@
 # QtAudioWake
+
 Native GUI utility to prevent speaker systems from sleeping. It works by playing an ultra-high frequency sine wave at a specified interval.
 The frequency is set to 22k Hz by default. You may specify a different default [at compile time](#changing-the-default-frequency) or otherwise change it by supplying a `--frequency` argument to the application.
 For example:
@@ -16,7 +17,12 @@ If you wish to start the application minimized to the system tray you can supply
 
 For available parameters use `--help`.
 
+## License
+
+This project is licensed under the GPL-2.0 License - see the [LICENSE](LICENSE) file for details.
+
 ## Building
+
 This project has a dependency on Qt6. Ensure both `qt6-base` and `qt6-multimedia`, as well as a C++ compiler and `cmake`, are installed before building.
 Then, run the provided build script:
 
