@@ -14,6 +14,7 @@
  */
 
 #include "components.h"
+#include "constants.h"
 #include <QHBoxLayout>
 
 namespace Components {
@@ -74,6 +75,26 @@ QGroupBox *createVolumeGroup(QSlider *&outSlider, QLabel *&outVolumeLabel) {
 
     layout->addWidget(outSlider);
     layout->addWidget(outVolumeLabel);
+
+    return group;
+}
+
+QGroupBox *createFrequencyGroup(QSlider *&outSlider, QLabel *&outFrequencyLabel,
+                                int defaultFrequency) {
+    auto *group = new QGroupBox("Frequency");
+    auto *layout = new QHBoxLayout(group);
+    layout->setContentsMargins(10, 5, 10, 5);
+    layout->setAlignment(Qt::AlignVCenter);
+
+    outSlider = new QSlider(Qt::Horizontal);
+    outSlider->setRange(kMinFrequency / 100, kMaxFrequency / 100);
+    outSlider->setValue(defaultFrequency / 100);
+
+    outFrequencyLabel = new QLabel(QString::number(defaultFrequency) + "Hz");
+    outFrequencyLabel->setMinimumWidth(40);
+
+    layout->addWidget(outSlider);
+    layout->addWidget(outFrequencyLabel);
 
     return group;
 }

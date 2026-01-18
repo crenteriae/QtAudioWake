@@ -13,18 +13,12 @@
  * GNU General Public License for more details.
  */
 
+#include "constants.h"
 #include "mainwindow.h"
 #include <QApplication>
 #include <QCommandLineParser>
 
 namespace {
-const QString kFrequencyOptName = "frequency";
-const QString kFrequencyOptShortcut = "f";
-const QString kMinimizeOptName = "minimized";
-const QString kMinimizeOptShortcut = "m";
-constexpr int kMaxFrequency = 30000;
-constexpr int kMinFrequency = 1000;
-
 int parseFrequency(QCommandLineParser &parser) {
     bool ok;
     int frequency = parser.value(kFrequencyOptName).toInt(&ok);

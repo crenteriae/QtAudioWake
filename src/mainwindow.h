@@ -44,6 +44,7 @@ class MainWindow : public QMainWindow {
     void updateInterval(int seconds);
     void updateDuration(int ms);
     void updateVolume(int value);
+    void updateFrequency(int Hz);
 
   private:
     void setupUi();
@@ -60,6 +61,8 @@ class MainWindow : public QMainWindow {
     QSpinBox *m_durationSpinBox;
     QSlider *m_volumeSlider;
     QLabel *m_volumeLabel;
+    QSlider *m_frequencySlider;
+    QLabel *m_frequencyLabel;
 
     QSystemTrayIcon *m_trayIcon = nullptr;
     QMenu *m_trayMenu = nullptr;

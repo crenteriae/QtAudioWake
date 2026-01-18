@@ -33,7 +33,7 @@ MainWindow::MainWindow(int frequency, bool startMinimized, QWidget *parent)
     loadStyleSheet();
 
     setWindowTitle(APPLICATION_NAME);
-    setFixedSize(350, 300);
+    setFixedSize(350, 350);
 
     if (m_startMinimized)
         toggleKeepAlive();
@@ -67,6 +67,8 @@ void MainWindow::setupUi() {
     mainLayout->addWidget(Components::createDurationGroup(m_durationSpinBox));
     mainLayout->addWidget(
         Components::createVolumeGroup(m_volumeSlider, m_volumeLabel));
+    mainLayout->addWidget(Components::createFrequencyGroup(
+        m_frequencySlider, m_frequencyLabel, m_frequency));
 
     m_toggleButton = Components::createToggleButton();
     mainLayout->addWidget(m_toggleButton);
@@ -147,6 +149,12 @@ void MainWindow::createConnections() {
 
     connect(m_volumeSlider, &QSlider::valueChanged, this,
             [this](int v) { m_volumeLabel->setText(QString("%1%").arg(v)); });
+    connect(m_frequencySlider, &QSlider::valueChanged, this,
+            [this](int f) -> void {
+                int hz = f * 100;
+                m_frequencyLabel->setText(QString("%1Hz").arg(hz));
+                updateFrequency(hz);
+            });
 }
 
 void MainWindow::toggleKeepAlive() {
@@ -178,3 +186,5 @@ void MainWindow::updateDuration(int ms) { m_toneGenerator->setDuration(ms); }
 void MainWindow::updateVolume(int value) {
     m_toneGenerator->setVolume(value / 100.0f);
 }
+
+void MainWindow::updateFrequency(int hz) { m_toneGenerator->setFrequency(hz); }
