@@ -17,8 +17,6 @@
 #include <QAudioFormat>
 #include <QMediaDevices>
 #include <QtMath>
-#include <qaudiodevice.h>
-#include <qmediadevices.h>
 
 namespace {
 constexpr int kSilencePaddingMs = 10;
@@ -86,6 +84,12 @@ void ToneGenerator::setVolume(float volume) {
         generateTone();
     }
 }
+
+int ToneGenerator::getFrequency() { return m_frequency; }
+
+int ToneGenerator::getDurationMs() { return m_durationMs; }
+
+float ToneGenerator::getVolume() { return m_volume; }
 
 bool ToneGenerator::isPlaying() const { return m_isPlaying; }
 

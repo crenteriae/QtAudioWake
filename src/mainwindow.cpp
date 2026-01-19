@@ -15,25 +15,35 @@
 
 #include "mainwindow.h"
 #include "components.h"
+#include "settings.h"
 #include "tonegenerator.h"
 #include <QApplication>
 #include <QFile>
 #include <QStyle>
 #include <QVBoxLayout>
+#include <qnumeric.h>
 
-MainWindow::MainWindow(int frequency, bool startMinimized, QWidget *parent)
+MainWindow::MainWindow(AppSettings::StartupConfig &cfg, QWidget *parent)
     : QMainWindow(parent), m_toneGenerator(new ToneGenerator(this)),
-      m_intervalTimer(new QTimer(this)), m_frequency(frequency),
-      m_startMinimized(startMinimized) {
-    m_toneGenerator->setFrequency(m_frequency);
+      m_intervalTimer(new QTimer(this)), m_frequencyHz(cfg.frequencyHz),
+      m_volumePercent(cfg.volumePercent), m_startMinimized(cfg.startMinimized),
+      m_intervalSec(cfg.intervalSec), m_durationMs(cfg.durationMs) {
 
     setupUi();
+
+    m_toneGenerator->setFrequency(cfg.frequencyHz);
+    m_toneGenerator->setDuration(cfg.durationMs);
+    m_toneGenerator->setVolume(cfg.volumePercent / 100.0);
+
     createConnections();
     setupSystemTray();
     loadStyleSheet();
 
     setWindowTitle(APPLICATION_NAME);
     setFixedSize(350, 350);
+
+    AppSettings::persistSettings(m_frequencyHz, m_volumePercent, m_intervalSec,
+                                 m_durationMs, m_startMinimized);
 
     if (m_startMinimized)
         toggleKeepAlive();
@@ -58,17 +68,19 @@ void MainWindow::setupUi() {
     auto *infoLabel = new QLabel(
         QString("Plays a %1 Hz tone to prevent speakers from sleeping.\n"
                 "Most adults cannot hear frequencies above 15kHz.")
-            .arg(m_frequency));
+            .arg(DEFAULT_TONE_FREQUENCY));
     infoLabel->setObjectName("infoLabel");
     infoLabel->setWordWrap(true);
     mainLayout->addWidget(infoLabel);
 
-    mainLayout->addWidget(Components::createIntervalGroup(m_intervalSpinBox));
-    mainLayout->addWidget(Components::createDurationGroup(m_durationSpinBox));
     mainLayout->addWidget(
-        Components::createVolumeGroup(m_volumeSlider, m_volumeLabel));
+        Components::createIntervalGroup(m_intervalSpinBox, m_intervalSec));
+    mainLayout->addWidget(
+        Components::createDurationGroup(m_durationSpinBox, m_durationMs));
+    mainLayout->addWidget(Components::createVolumeGroup(
+        m_volumeSlider, m_volumeLabel, m_volumePercent));
     mainLayout->addWidget(Components::createFrequencyGroup(
-        m_frequencySlider, m_frequencyLabel, m_frequency));
+        m_frequencySlider, m_frequencyLabel, m_frequencyHz));
 
     m_toggleButton = Components::createToggleButton();
     mainLayout->addWidget(m_toggleButton);
@@ -133,6 +145,12 @@ void MainWindow::closeEvent(QCloseEvent *event) {
     } else {
         event->accept();
     }
+
+    AppSettings::persistSettings(m_toneGenerator->getFrequency(),
+                                 qRound(m_toneGenerator->getVolume() * 100.0f),
+                                 m_intervalTimer->interval() / 1000,
+                                 m_toneGenerator->getDurationMs(),
+                                 m_startMinimized);
 }
 
 void MainWindow::createConnections() {

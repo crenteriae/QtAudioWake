@@ -24,9 +24,10 @@
 
 namespace Components {
 
-QGroupBox *createIntervalGroup(QSpinBox *&outSpinBox);
-QGroupBox *createDurationGroup(QSpinBox *&outSpinBox);
-QGroupBox *createVolumeGroup(QSlider *&outSlider, QLabel *&outVolumeLabel);
+QGroupBox *createIntervalGroup(QSpinBox *&outSpinBox, int defaultInterval);
+QGroupBox *createDurationGroup(QSpinBox *&outSpinBox, int defaultDuration);
+QGroupBox *createVolumeGroup(QSlider *&outSlider, QLabel *&outVolumeLabel,
+                             int defaultVolume);
 QGroupBox *createFrequencyGroup(QSlider *&outSlider, QLabel *&outFrequencyLabel,
                                 int defaultFrequency);
 QPushButton *createToggleButton();

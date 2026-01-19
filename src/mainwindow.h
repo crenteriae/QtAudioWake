@@ -16,6 +16,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "settings.h"
 #include <QCloseEvent>
 #include <QLabel>
 #include <QMainWindow>
@@ -35,7 +36,7 @@ class MainWindow : public QMainWindow {
     void closeEvent(QCloseEvent *event) override;
 
   public:
-    explicit MainWindow(int frequency, bool startMinimized = false,
+    explicit MainWindow(AppSettings::StartupConfig &cfg,
                         QWidget *parent = nullptr);
     ~MainWindow();
 
@@ -68,7 +69,10 @@ class MainWindow : public QMainWindow {
     QMenu *m_trayMenu = nullptr;
     bool m_minimizeToTray = true;
 
-    int m_frequency;
+    int m_frequencyHz;
+    int m_volumePercent;
+    int m_intervalSec;
+    int m_durationMs;
     bool m_isRunning = false;
     bool m_startMinimized = false;
 };

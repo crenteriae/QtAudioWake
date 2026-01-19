@@ -22,6 +22,9 @@ add_executable(${PROJECT_NAME}
     src/components.h
     src/tonegenerator.cpp
     src/tonegenerator.h
+    src/settings.cpp
+    src/settings.h
+    src/constants.h
     resources.qrc
 )
 

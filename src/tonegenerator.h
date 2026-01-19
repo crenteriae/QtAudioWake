@@ -33,6 +33,10 @@ class ToneGenerator : public QObject {
     void setDuration(int durationMs);
     void setVolume(float volume);
 
+    int getFrequency();
+    int getDurationMs();
+    float getVolume();
+
     bool isPlaying() const;
 
   public slots:

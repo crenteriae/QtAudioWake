@@ -15,29 +15,18 @@
 
 #include "constants.h"
 #include "mainwindow.h"
+#include "settings.h"
 #include <QApplication>
 #include <QCommandLineParser>
 
 namespace {
-int parseFrequency(QCommandLineParser &parser) {
-    bool ok;
-    int frequency = parser.value(kFrequencyOptName).toInt(&ok);
-    if (!ok || frequency < kMinFrequency || frequency > kMaxFrequency) {
-        qWarning() << "Invalid frequency, using default:"
-                   << DEFAULT_TONE_FREQUENCY;
-        frequency = DEFAULT_TONE_FREQUENCY;
-    }
-
-    return frequency;
-}
-
 void addCmdArgs(QCommandLineParser &parser) {
     parser.addHelpOption();
     QCommandLineOption frequencyOption(
         QStringList() << kFrequencyOptShortcut << kFrequencyOptName,
-        "Tone frequency in Hz (default: " +
+        "Tone frequency in Hz (default: from settings, otherwise: " +
             QString::number(DEFAULT_TONE_FREQUENCY) + ")",
-        "hz", QString::number(DEFAULT_TONE_FREQUENCY));
+        "hz");
     parser.addOption(frequencyOption);
 
     QCommandLineOption minimizeOption(
@@ -59,11 +48,26 @@ int main(int argc, char *argv[]) {
     addCmdArgs(parser);
     parser.process(app);
 
-    int frequency = parseFrequency(parser);
-    bool startMinimized = parser.isSet(kMinimizeOptName);
-    MainWindow window(frequency, startMinimized);
+    auto parseIntOpt = [&](const QString name, int lo, int hi, int &target) {
+        if (!parser.isSet(name))
+            return;
 
-    if (!startMinimized)
+        bool ok = false;
+        int value = parser.value(name).toInt(&ok);
+        if (ok && value >= lo && value <= hi)
+            target = value;
+        else
+            qWarning() << "Invalid " << name << " keeping " << target;
+    };
+
+    auto cfg = AppSettings::loadStartupConfig();
+    parseIntOpt(kFrequencyOptName, kMinFrequency, kMaxFrequency,
+                cfg.frequencyHz);
+    cfg.startMinimized =
+        parser.isSet(kMinimizeOptName) ? true : cfg.startMinimized;
+    MainWindow window(cfg);
+
+    if (!cfg.startMinimized)
         window.show();
 
     return app.exec();

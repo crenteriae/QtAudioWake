@@ -19,7 +19,7 @@
 
 namespace Components {
 
-QGroupBox *createIntervalGroup(QSpinBox *&outSpinBox) {
+QGroupBox *createIntervalGroup(QSpinBox *&outSpinBox, int defaultInterval) {
     auto *group = new QGroupBox("Interval");
     auto *layout = new QHBoxLayout(group);
     layout->setContentsMargins(10, 5, 10, 5);
@@ -29,7 +29,7 @@ QGroupBox *createIntervalGroup(QSpinBox *&outSpinBox) {
 
     outSpinBox = new QSpinBox();
     outSpinBox->setRange(1, 300);
-    outSpinBox->setValue(30);
+    outSpinBox->setValue(defaultInterval);
     outSpinBox->setSuffix(" sec");
     outSpinBox->setMinimumWidth(100);
 
@@ -39,7 +39,7 @@ QGroupBox *createIntervalGroup(QSpinBox *&outSpinBox) {
     return group;
 }
 
-QGroupBox *createDurationGroup(QSpinBox *&outSpinBox) {
+QGroupBox *createDurationGroup(QSpinBox *&outSpinBox, int defaultDuration) {
     auto *group = new QGroupBox("Tone Duration");
     auto *layout = new QHBoxLayout(group);
     layout->setContentsMargins(10, 5, 10, 5);
@@ -49,7 +49,7 @@ QGroupBox *createDurationGroup(QSpinBox *&outSpinBox) {
 
     outSpinBox = new QSpinBox();
     outSpinBox->setRange(10, 500);
-    outSpinBox->setValue(50);
+    outSpinBox->setValue(defaultDuration);
     outSpinBox->setSuffix(" ms");
     outSpinBox->setSingleStep(10);
     outSpinBox->setMinimumWidth(100);
@@ -60,7 +60,8 @@ QGroupBox *createDurationGroup(QSpinBox *&outSpinBox) {
     return group;
 }
 
-QGroupBox *createVolumeGroup(QSlider *&outSlider, QLabel *&outVolumeLabel) {
+QGroupBox *createVolumeGroup(QSlider *&outSlider, QLabel *&outVolumeLabel,
+                             int defaultVolume) {
     auto *group = new QGroupBox("Volume");
     auto *layout = new QHBoxLayout(group);
     layout->setContentsMargins(10, 5, 10, 5);
@@ -68,9 +69,9 @@ QGroupBox *createVolumeGroup(QSlider *&outSlider, QLabel *&outVolumeLabel) {
 
     outSlider = new QSlider(Qt::Horizontal);
     outSlider->setRange(1, 100);
-    outSlider->setValue(30);
+    outSlider->setValue(defaultVolume);
 
-    outVolumeLabel = new QLabel("30%");
+    outVolumeLabel = new QLabel(QString("%1%").arg(defaultVolume));
     outVolumeLabel->setMinimumWidth(40);
 
     layout->addWidget(outSlider);
